@@ -13,7 +13,7 @@ def connect_bd():
 def create_table_users():
     connect = connect_bd()
     cursor = connect.cursor()
-    sql = 'CREATE TABLE users' \
+    sql = 'CREATE TABLE IF NOT EXISTS users' \
           ' (ID BIGINT NOT NULL,' \
           ' first_name VARCHAR(200) DEFAULT NULL,' \
           ' username VARCHAR(200) DEFAULT NULL,' \
@@ -28,7 +28,7 @@ def create_table_users():
 def create_table_answers():
     connect = connect_bd()
     cursor = connect.cursor()
-    sql = 'CREATE TABLE answers' \
+    sql = 'CREATE TABLE IF NOT EXISTS answers' \
           ' (ID serial PRIMARY KEY,' \
           ' login_from_user VARCHAR(200) DEFAULT NULL,' \
           ' logim_about_user VARCHAR(200) DEFAULT NULL,' \
@@ -122,8 +122,8 @@ if __name__ == '__main__':
     print('db commands')
 
 
-    drop_table('users')
-    drop_table('answers')
+    # drop_table('users')
+    # drop_table('answers')
     create_table_answers()
     # create_new_answer(354585871, 1908289217, 'gfhvfdfkjdhfkjj sdlkf jdlkfjlskdjf lksjf sldf')
     create_table_users()

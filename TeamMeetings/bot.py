@@ -3,9 +3,11 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-from TeamMeetings.handlers.answer_from_user import register_answer_form_handler
-from TeamMeetings.handlers.create_daiting_handler import create_dating_handler
-from TeamMeetings.handlers.start_handler import register_start_handlers
+from TeamMeetings.postgre.commands_db import create_table_users, create_table_answers
+from handlers.answer_from_user import register_answer_form_handler
+from handlers.create_daiting_handler import create_dating_handler
+from handlers.start_handler import register_start_handlers
+
 
 
 def register_all_middlewares(dp):
@@ -25,7 +27,7 @@ def register_all_handlers(dp):
 
 
 async def main():
-    bot = Bot(token='5693541136:AAF_JV21NEekf7ZpvwpdqwW-9bvYLbUunxM', parse_mode='HTML')
+    bot = Bot(token='', parse_mode='HTML')
     storage = MemoryStorage()
     dp = Dispatcher(bot, storage=storage)
 
@@ -37,6 +39,8 @@ async def main():
     try:
         print("Bot started")
         await dp.start_polling()
+        create_table_users()
+        create_table_answers()
     finally:
         await dp.storage.close()
         await dp.storage.wait_closed()

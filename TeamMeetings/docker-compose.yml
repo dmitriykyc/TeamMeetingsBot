@@ -2,10 +2,12 @@ version: "3.1"
 
 services:
   db:
-    container_name: TeamMeetings
+    container_name: dbTMB
     image: sameersbn/postgresql:10-2
     environment:
-      PG_PASSWORD: kdkimikois
+      POSTGRES_DB: "TeamMeetings"
+      POSTGRES_USER: "dmitriy"
+      POSTGRES_PASSWORD: "dmitriy"
     restart: always
     ports:
       - 5432:5432
@@ -15,15 +17,13 @@ services:
       - ./postgres:/var/lib/postgresql
 
   tgbot:
-    container_name: TeamMeetingsBot
+    container_name: botTNB
     build:
       context: .
     command: python bot.py
     restart: always
     networks:
       - botnet
-    volumes:
-      - .:/TeamMeetingsBot
     depends_on:
       - db
 
