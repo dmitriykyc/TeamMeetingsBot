@@ -25,7 +25,7 @@ def register_all_handlers(dp):
 
 
 async def main():
-    bot = Bot(token='5748588465:AAEIz1tmCGWG1cZjp9-4A7YEdWfWnID5H_c', parse_mode='HTML')
+    bot = Bot(token='5693541136:AAF_JV21NEekf7ZpvwpdqwW-9bvYLbUunxM', parse_mode='HTML')
     storage = MemoryStorage()
     dp = Dispatcher(bot, storage=storage)
 
@@ -35,8 +35,8 @@ async def main():
 
     # start
     try:
-        await dp.start_polling()
         print("Bot started")
+        await dp.start_polling()
     finally:
         await dp.storage.close()
         await dp.storage.wait_closed()

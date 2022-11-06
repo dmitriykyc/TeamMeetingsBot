@@ -1,0 +1,32 @@
+version: "3.1"
+
+services:
+  db:
+    container_name: TeamMeetings
+    image: sameersbn/postgresql:10-2
+    environment:
+      PG_PASSWORD: kdkimikois
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      - botnet
+    volumes:
+      - ./postgres:/var/lib/postgresql
+
+  tgbot:
+    container_name: TeamMeetingsBot
+    build:
+      context: .
+    command: python bot.py
+    restart: always
+    networks:
+      - botnet
+    volumes:
+      - .:/TeamMeetingsBot
+    depends_on:
+      - db
+
+networks:
+  botnet:
+    driver: bridge
