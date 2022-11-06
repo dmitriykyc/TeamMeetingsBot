@@ -19,7 +19,7 @@ services:
   tgbot:
     container_name: botTNB
     build:
-      context: .
+      context: TeamMeetings
     command: python bot.py
     restart: always
     networks:
