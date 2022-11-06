@@ -1,6 +1,6 @@
 FROM python:3.8
 
-WORKDIR /TeamMeetingsBot
-COPY requirements.txt /TeamMeetingsBot
+WORKDIR /TeamMeetings
+COPY requirements.txt /TeamMeetings
 RUN pip install -r requirements.txt
-COPY . /TeamMeetingsBot
+COPY . /TeamMeetings
