@@ -3,7 +3,6 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-from TeamMeetings.postgre.commands_db import create_table_users, create_table_answers
 from handlers.answer_from_user import register_answer_form_handler
 from handlers.create_daiting_handler import create_dating_handler
 from handlers.start_handler import register_start_handlers
