@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -7,6 +8,7 @@ from handlers.answer_from_user import register_answer_form_handler
 from handlers.create_daiting_handler import create_dating_handler
 from handlers.start_handler import register_start_handlers
 
+print(os.listdir())
 
 
 def register_all_middlewares(dp):
