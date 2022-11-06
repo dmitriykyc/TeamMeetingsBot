@@ -39,8 +39,6 @@ async def main():
     try:
         print("Bot started")
         await dp.start_polling()
-        create_table_users()
-        create_table_answers()
     finally:
         await dp.storage.close()
         await dp.storage.wait_closed()
