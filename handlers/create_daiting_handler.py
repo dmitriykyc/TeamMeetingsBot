@@ -3,9 +3,9 @@ import random
 from aiogram import Dispatcher, types
 from aiogram.types import CallbackQuery
 
-from TeamMeetings.keyboards.inline_answer import inline_confirm_admin, inline_confirm_user, inline_send_answer
-from TeamMeetings.keyboards.inline_answer_data import data_confirm_admin, data_confirm_user
-from TeamMeetings.postgre.commands_db import select_all_active_users, select_user
+from keyboards.inline_answer import inline_confirm_admin, inline_confirm_user, inline_send_answer
+from keyboards.inline_answer_data import data_confirm_admin, data_confirm_user
+from postgre.commands_db import select_all_active_users, select_user
 
 admins = [354585871, 485696536]
 

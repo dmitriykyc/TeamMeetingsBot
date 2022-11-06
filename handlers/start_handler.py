@@ -1,9 +1,7 @@
 from aiogram import Dispatcher, types
-from aiogram.dispatcher.filters import Command
-from aiogram.types.chat_member import ChatMember
 
-from TeamMeetings.keyboards.reply_main import reply_main_menu
-from TeamMeetings.postgre.commands_db import add_user, select_user, update_active_user
+from keyboards.reply_main import reply_main_menu
+from postgre.commands_db import add_user, select_user, update_active_user
 
 admins = [354585871, 485696536]
 
@@ -45,7 +43,7 @@ def register_start_handlers(dp: Dispatcher):
     async def get_report(message: types.Message):
         if message.from_user['id'] in admins:
             await message.answer('Таблица со всеми ответами участников:')
-            doc = open("/Users/dmitriykyc/PycharmProjects/TeamMeetingsBot/TeamMeetings/soft/Report_Bot.xlsx", "rb")
+            doc = open("/soft/Report_Bot.xlsx", "rb")
             await message.answer_document(doc)
 
 

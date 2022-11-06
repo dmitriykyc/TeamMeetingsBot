@@ -2,10 +2,10 @@ from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-from TeamMeetings.keyboards.inline_answer_data import data_send_answer
-from TeamMeetings.postgre.commands_db import select_user, create_new_answer
-from TeamMeetings.soft.create_xlsx import create_answer_xlsx
-from TeamMeetings.state.answer_state import GetAnswer
+from keyboards.inline_answer_data import data_send_answer
+from postgre.commands_db import select_user, create_new_answer
+from soft.create_xlsx import create_answer_xlsx
+from state.answer_state import GetAnswer
 
 admins = [354585871, 485696536]
 

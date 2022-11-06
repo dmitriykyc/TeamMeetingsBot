@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from TeamMeetings.keyboards.inline_answer_data import data_confirm_admin, data_confirm_user, data_send_answer
+from keyboards.inline_answer_data import data_confirm_admin, data_confirm_user, data_send_answer
 
 
 def inline_confirm_admin(user1, user2):
