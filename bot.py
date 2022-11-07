@@ -1,11 +1,9 @@
 import asyncio
 import os
 
-from aiogram.contrib.fsm_storage.redis import RedisStorage, RedisStorage2
-from aioredis import Redis
+from aiogram.contrib.fsm_storage.redis import RedisStorage2
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 from handlers.answer_from_user import register_answer_form_handler
 from handlers.create_daiting_handler import create_dating_handler
