@@ -1,9 +1,9 @@
-version: "3.1"
+version: "3.8"
 
 services:
   db:
-    container_name: dbTMB
-    image: sameersbn/postgresql:10-2
+    container_name: databaseTM
+    image: postgresql:12
     environment:
       POSTGRES_DB: "TeamMeetings"
       POSTGRES_USER: "dmitriy"
@@ -17,13 +17,15 @@ services:
       - ./postgres:/var/lib/postgresql
 
   tgbot:
-    container_name: botTNB
+    container_name: botTM
     build:
-      context: TeamMeetings
+      context: .
     command: python bot.py
     restart: always
     networks:
       - botnet
+    volumes:
+      - .:/TeamMeetings
     depends_on:
       - db
 
