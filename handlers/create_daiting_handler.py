@@ -6,8 +6,9 @@ from aiogram.types import CallbackQuery
 from keyboards.inline_answer import inline_confirm_admin, inline_confirm_user, inline_send_answer
 from keyboards.inline_answer_data import data_confirm_admin, data_confirm_user
 from postgre.commands_db import select_all_active_users, select_user
+from filters.all_admins import get_all_admins
 
-admins = [354585871, 485696536]
+admins = get_all_admins()
 
 def create_dating_handler(dp: Dispatcher):
     def change_two_users():

@@ -1,9 +1,12 @@
 import datetime
+import os
 
 import openpyxl
 from openpyxl.styles import Alignment
 
 from postgre.commands_db import select_user
+
+path = os.getenv("PATH_XLSX")
 
 long_text = Alignment(
     horizontal='left',
@@ -23,7 +26,7 @@ def create_answer_xlsx(from_user, about_user, text):
     about_user_data = select_user(about_user)[0]
     print(from_user_data)
 
-    workbook = openpyxl.load_workbook('/soft/Report_Bot.xlsx')
+    workbook = openpyxl.load_workbook(path)
     sheet = workbook.active
     max_row = sheet.max_row + 1
     date = datetime.date.today()
@@ -37,6 +40,6 @@ def create_answer_xlsx(from_user, about_user, text):
     sheet[f'D{max_row}'].alignment = long_text
     sheet[f'D{max_row}'] = text
 
-    workbook.save('/Users/dmitriykyc/PycharmProjects/TeamMeetingsBot/TeamMeetings/soft/Report_Bot.xlsx')
+    workbook.save(path)
 
 

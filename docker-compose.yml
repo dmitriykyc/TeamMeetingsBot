@@ -16,6 +16,14 @@ services:
     volumes:
       - ./postgres:/var/lib/postgresql
 
+  redis:
+    image: redis:5-alpine
+    restart: on-failure
+    volumes:
+      - redis-data:/data
+    networks:
+      - botnet
+
   tgbot:
     container_name: botTM
     build:

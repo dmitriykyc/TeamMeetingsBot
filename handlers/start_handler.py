@@ -1,14 +1,17 @@
+import os
+
 from aiogram import Dispatcher, types
 
 from keyboards.reply_main import reply_main_menu
 from postgre.commands_db import add_user, select_user, update_active_user, create_table_users, create_table_answers
+from filters.all_admins import get_all_admins
 
-admins = [354585871, 485696536]
+admins = get_all_admins()
 
 
 def register_start_handlers(dp: Dispatcher):
 
-    @dp.message_handler(text='т')
+    @dp.message_handler(text='Создай таблицы')
     async def crete_t(message: types.Message):
         create_table_users()
         create_table_answers()
@@ -46,11 +49,11 @@ def register_start_handlers(dp: Dispatcher):
         if my_chat_member['new_chat_member']['status'] == "kicked":
             update_active_user(user_id)
 
-    @dp.message_handler(text='Отчет Exel')
+    @dp.message_handler(text='Отчет Exele')
     async def get_report(message: types.Message):
         if message.from_user['id'] in admins:
             await message.answer('Таблица со всеми ответами участников:')
-            doc = open("/soft/Report_Bot.xlsx", "rb")
+            doc = open(os.getenv("PATH_XLSX"), "rb")
             await message.answer_document(doc)
 
 

@@ -1,6 +1,9 @@
 import asyncio
 import os
 
+from aiogram.contrib.fsm_storage.redis import RedisStorage, RedisStorage2
+from aioredis import Redis
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
@@ -8,8 +11,7 @@ from handlers.answer_from_user import register_answer_form_handler
 from handlers.create_daiting_handler import create_dating_handler
 from handlers.start_handler import register_start_handlers
 
-print(os.listdir())
-
+load_dotenv()
 
 def register_all_middlewares(dp):
     pass
@@ -28,9 +30,8 @@ def register_all_handlers(dp):
 
 
 async def main():
-    bot = Bot(token='', parse_mode='HTML')
-    storage = MemoryStorage()
-    dp = Dispatcher(bot, storage=storage)
+    bot = Bot(token=os.getenv("TOKEN"), parse_mode='HTML')
+    dp = Dispatcher(bot, storage=RedisStorage2())
 
     register_all_middlewares(dp)
     register_all_filters(dp)

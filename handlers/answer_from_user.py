@@ -6,8 +6,9 @@ from keyboards.inline_answer_data import data_send_answer
 from postgre.commands_db import select_user, create_new_answer
 from soft.create_xlsx import create_answer_xlsx
 from state.answer_state import GetAnswer
+from filters.all_admins import get_all_admins
 
-admins = [354585871, 485696536]
+admins = get_all_admins()
 
 def register_answer_form_handler(dp: Dispatcher):
 
@@ -38,6 +39,11 @@ def register_answer_form_handler(dp: Dispatcher):
                                              f' написал обратную свзь о {user_aboute[1]} (@{user_aboute[2]})\n\n'
                                              f'Текст: \n'
                                              f'{text}')
+
+
+    @dp.message_handler()
+    def answ_unicnown(nessage: types.Message):
+        nessage.answer('К сожалению, я пока не знаю такой команды🙃')
 
 
 

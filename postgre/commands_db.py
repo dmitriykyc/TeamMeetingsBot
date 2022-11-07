@@ -1,11 +1,12 @@
+import os
 import random
 
 import psycopg2
 
 
 def connect_bd():
-    connect = psycopg2.connect(dbname='dbTM', user='dmitriy',
-                               password='dmitriy', host="51.250.99.33", port='5432')
+    connect = psycopg2.connect(dbname=os.getenv("DB_NAME"), user=os.getenv("DB_USER"),
+                               password=os.getenv("DB_PASSWORD"), host="localhost", port='5432')
     return connect
 
 
@@ -123,9 +124,9 @@ if __name__ == '__main__':
 
     # drop_table('users')
     # drop_table('answers')
-    create_table_answers()
-    # create_new_answer(354585871, 1908289217, 'gfhvfdfkjdhfkjj sdlkf jdlkfjlskdjf lksjf sldf')
-    create_table_users()
+    # create_table_answers()
+    # # create_new_answer(354585871, 1908289217, 'gfhvfdfkjdhfkjj sdlkf jdlkfjlskdjf lksjf sldf')
+    # create_table_users()
     # add_user(354585871, 'Дмитрий', 'DmKusov')
     # add_user(485696536, 'Олег', 'Valeznik')
     # add_user(342857621, 'Елена', 'Elena_kusova')
