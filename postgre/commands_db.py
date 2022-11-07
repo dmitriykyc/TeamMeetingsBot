@@ -4,9 +4,8 @@ import psycopg2
 
 
 def connect_bd():
-    connect = psycopg2.connect(dbname='mydb', user='dima',
-                               password='dima', host="51.250.99.33",
-                               port="5432")
+    connect = psycopg2.connect(dbname='postgre', user='postgres1',
+                               password='postgres1', host="localhost")
     return connect
 
 
