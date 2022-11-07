@@ -1,12 +1,19 @@
 from aiogram import Dispatcher, types
 
 from keyboards.reply_main import reply_main_menu
-from postgre.commands_db import add_user, select_user, update_active_user
+from postgre.commands_db import add_user, select_user, update_active_user, create_table_users, create_table_answers
 
 admins = [354585871, 485696536]
 
 
 def register_start_handlers(dp: Dispatcher):
+
+    @dp.message_handler(text='т')
+    async def crete_t(message: types.Message):
+        create_table_users()
+        create_table_answers()
+        await message.answer('Tables is create')
+
     @dp.message_handler(commands='start')
     async def get_start(message: types.Message):
         user_id = message.from_user['id']
