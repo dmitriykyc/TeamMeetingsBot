@@ -5,8 +5,9 @@ services:
     container_name: databaseTM
     image: postgres:14.1-alpine
     environment:
-      POSTGRES_USER: postgres1
-      POSTGRES_PASSWORD: postgres1
+      POSTGRES_DB: dbTM
+      POSTGRES_USER: dmitriy
+      POSTGRES_PASSWORD: dmitriy
     restart: always
     ports:
       - '5432:5432'
