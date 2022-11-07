@@ -5,9 +5,9 @@ services:
     container_name: databaseTM
     image: sameersbn/postgresql:10-2
     environment:
-      POSTGRES_DB: "TeamMeetings"
-      POSTGRES_USER: "dmitriy"
-      POSTGRES_PASSWORD: "dmitriy"
+      POSTGRES_USER: dima
+      POSTGRES_PASSWORD: dima
+      POSTGRES_DB: mydb
     restart: always
     ports:
       - 5432:5432
