@@ -20,7 +20,7 @@ services:
     image: redis:5-alpine
     restart: on-failure
     volumes:
-      - redis-data:/data
+      - ./storage/redis/data:/data
     networks:
       - botnet
 
