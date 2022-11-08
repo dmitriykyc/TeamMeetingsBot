@@ -43,7 +43,7 @@ def register_answer_form_handler(dp: Dispatcher):
 
     @dp.message_handler()
     def answ_unicnown(nessage: types.Message):
-        nessage.answer('К сожалению, я пока не знаю такой команды🙃')
+        await nessage.answer('К сожалению, я пока не знаю такой команды🙃')
 
 
 
