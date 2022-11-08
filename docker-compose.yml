@@ -37,4 +37,11 @@ services:
     image: redis:alpine
     restart: on-failure
     command: redis-server
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    networks:
+      - botnet
 
+networks:
+  botnet:
+    driver: bridge
