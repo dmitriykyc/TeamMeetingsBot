@@ -30,7 +30,7 @@ def register_all_handlers(dp):
 async def main():
     bot = Bot(token=os.getenv("TOKEN"), parse_mode='HTML')
 
-    dp = Dispatcher(bot, storage=RedisStorage2())
+    dp = Dispatcher(bot, storage=RedisStorage2(host='redis'))
 
     register_all_middlewares(dp)
     register_all_filters(dp)
