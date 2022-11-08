@@ -22,9 +22,9 @@ services:
     container_name: databaseTM
     image: postgres:14.1-alpine
     environment:
-      POSTGRES_DB: $DB_NAME
-      POSTGRES_USER: $DB_USER
-      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: TeamMeetings
+      POSTGRES_USER: dmitriy
+      POSTGRES_PASSWORD: kd1ki2
     restart: always
     ports:
       - '5432:5432'
