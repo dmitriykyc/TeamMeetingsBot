@@ -1,23 +1,6 @@
 version: "3.1"
 
 services:
-
-  tgbot:
-    container_name: botTM
-    build:
-      context: .
-    command: python bot.py
-    restart: always
-    networks:
-      - botnet
-    volumes:
-      - .:/TeamMeetings
-    depends_on:
-      - db
-      - redis
-    env_file:
-      - ".env"
-
   db:
     container_name: databaseTM
     image: postgres:14.1-alpine
@@ -36,9 +19,26 @@ services:
   redis:
     image: redis:alpine
     restart: on-failure
-    command: redis-server
-    environment:
-      - REDIS_REPLICATION_MODE=master
+    volumes:
+      - ./storage/redis/data:/data
+    networks:
+      - botnet
+
+  tgbot:
+    container_name: botTM
+    build:
+      context: .
+    command: python bot.py
+    restart: always
+    networks:
+      - botnet
+    volumes:
+      - .:/TeamMeetings
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - ".env"
 
 networks:
   botnet:
