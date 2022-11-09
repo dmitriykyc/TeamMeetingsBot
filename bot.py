@@ -1,5 +1,6 @@
 import asyncio
 import os
+import logging
 
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
 from dotenv import load_dotenv
@@ -10,6 +11,7 @@ from handlers.create_daiting_handler import create_dating_handler
 from handlers.start_handler import register_start_handlers
 
 load_dotenv()
+logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="w")
 
 def register_all_middlewares(dp):
     pass
@@ -38,6 +40,7 @@ async def main():
     # start
     try:
         print("Bot started")
+        logging.info('Bot srarted')
         await dp.start_polling()
     finally:
         await dp.storage.close()
