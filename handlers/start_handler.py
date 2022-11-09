@@ -8,7 +8,7 @@ from postgre.commands_db import add_user, select_user, update_active_user, creat
 from filters.all_admins import get_all_admins
 
 admins = get_all_admins()
-logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="w",
+logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="r+",
                     format="%(asctime)s %(levelname)s %(message)s:-->")
 
 
