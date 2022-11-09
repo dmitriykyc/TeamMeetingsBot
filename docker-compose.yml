@@ -22,9 +22,9 @@ services:
     container_name: databaseTM
     image: postgres:14.1-alpine
     environment:
-      POSTGRES_DB: TeamMeetings
-      POSTGRES_USER: postgre
-      POSTGRES_PASSWORD: postgre
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
     restart: always
     ports:
       - '5432:5432'
@@ -34,6 +34,7 @@ services:
       - ./postgres:/var/lib/postgresql
 
   redis:
+    container_name: redisTM
     image: redis:alpine
     restart: on-failure
     command: redis-server

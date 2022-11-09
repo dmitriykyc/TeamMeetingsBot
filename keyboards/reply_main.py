@@ -6,7 +6,7 @@ reply_main_menu = ReplyKeyboardMarkup(
             KeyboardButton(text='Запустить рандомайзер')
         ],
         [
-            KeyboardButton(text='Отчет Exel')
+            KeyboardButton(text='Отчет Exele')
         ]
     ], resize_keyboard=True
 )
