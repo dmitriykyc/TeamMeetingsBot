@@ -8,7 +8,8 @@ from postgre.commands_db import add_user, select_user, update_active_user, creat
 from filters.all_admins import get_all_admins
 
 admins = get_all_admins()
-logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="w")
+logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="w",
+                    format="%(asctime)s %(levelname)s %(message)s:-->")
 
 
 def register_start_handlers(dp: Dispatcher):
@@ -30,6 +31,7 @@ def register_start_handlers(dp: Dispatcher):
             add_user(user_id, first_name, username)
         if user_db != [] and user_db[0][3] == False:
             update_active_user(user_id)
+        logging.info(f'Пользователь нажал START: {message.from_user}')
 
         if message.from_user['id'] in admins:
             await message.answer('Привет, Админ!✌️\n'
@@ -54,11 +56,10 @@ def register_start_handlers(dp: Dispatcher):
 
     @dp.message_handler(text='Отчет Exele')
     async def get_report(message: types.Message):
+        logging.info(f'{message.from_user} запросил таблицу для скачивания')
         if message.from_user['id'] in admins:
             await message.answer('Таблица со всеми ответами участников:')
             doc = open(os.getenv("PATH_XLSX"), "rb")
             await message.answer_document(doc)
-
-
         else:
             await message.answer('Функция доступна только для администраторов')

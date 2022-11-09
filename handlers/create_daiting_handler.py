@@ -1,3 +1,4 @@
+import logging
 import random
 
 from aiogram import Dispatcher, types
@@ -9,6 +10,9 @@ from postgre.commands_db import select_all_active_users, select_user
 from filters.all_admins import get_all_admins
 
 admins = get_all_admins()
+logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="w",
+                    format="%(asctime)s %(levelname)s %(message)s:-->")
+
 
 def create_dating_handler(dp: Dispatcher):
     def change_two_users():
@@ -41,6 +45,9 @@ def create_dating_handler(dp: Dispatcher):
         user1 = list(select_user(callback_data['user1'])[0])
         user2 = list(select_user(callback_data['user2'])[0])
         print(user1)
+        logging.info(f'Отправлены приглашения для: \n'
+                     f'{user1}\n'
+                     f'{user2}')
         await call.message.answer('✅Отлично!\n '
                                   'Приглашения отправлены, вы получите подтверждения от этих пользователей.')
         await dp.bot.send_message(user1[0],
@@ -55,6 +62,8 @@ def create_dating_handler(dp: Dispatcher):
         await call.answer()
         user_from = call.from_user
         user_aboute = list(select_user(callback_data['user_aboute'])[0])
+        logging.info(f'{call.from_user["first_name"]} (@{user_from["username"]}) подтвердил встречу '
+                     f'c {user_aboute[1]} (@{user_aboute[2]})')
         await call.message.edit_text(f'👍Отлично! \n'
                                      f'После вашей встречи с {user_aboute[1]} (@{user_aboute[2]})'
                                      f'нажмите кнопку внизу',

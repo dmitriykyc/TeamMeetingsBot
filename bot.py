@@ -11,7 +11,9 @@ from handlers.create_daiting_handler import create_dating_handler
 from handlers.start_handler import register_start_handlers
 
 load_dotenv()
-logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="w")
+logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="w",
+                    format="%(asctime)s %(levelname)s %(message)s:-->")
+
 
 def register_all_middlewares(dp):
     pass
@@ -21,12 +23,10 @@ def register_all_filters(dp):
     pass
 
 
-
 def register_all_handlers(dp):
     register_start_handlers(dp)
     create_dating_handler(dp)
     register_answer_form_handler(dp)
-
 
 
 async def main():
