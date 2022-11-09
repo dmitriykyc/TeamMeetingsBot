@@ -49,8 +49,8 @@ def register_answer_form_handler(dp: Dispatcher):
                                              f'{text}')
 
     @dp.message_handler()
-    async def answ_unicnown(nessage: types.Message):
+    async def answ_unicnown(message: types.Message):
         logging.info(f'Пользователь {message.from_user}\n'
                      f'Написал неизвестный текст:\n'
                      f'{message.text}')
-        await nessage.answer('К сожалению, я пока не знаю такой команды🙃')
+        await message.answer('К сожалению, я пока не знаю такой команды🙃')
