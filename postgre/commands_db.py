@@ -5,7 +5,7 @@ import psycopg2
 
 
 def connect_bd():
-    connect = psycopg2.connect(dbname='TeamMeetings', user='dmitriy', password='kd1ki2', host="localhost", port='5432')
+    connect = psycopg2.connect(dbname='TeamMeetings', user='postgre', password='postgre', port='5432')
     return connect
 
 
