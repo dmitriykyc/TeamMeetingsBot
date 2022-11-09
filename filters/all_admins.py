@@ -1,2 +1,2 @@
 def get_all_admins():
-    return [354585871, 485696536]
+    return [354585871]
