@@ -21,7 +21,7 @@ small_text = Alignment(
     shrink_to_fit=True
 )
 
-def create_answer_xlsx(from_user, about_user, text):
+def create_answer_xlsx(from_user, about_user, txt_about_place, txt_about_user):
     from_user_data = select_user(from_user)[0]
     about_user_data = select_user(about_user)[0]
     print(from_user_data)
@@ -38,7 +38,9 @@ def create_answer_xlsx(from_user, about_user, text):
     sheet[f'C{max_row}'].alignment = long_text
     sheet[f'C{max_row}'] = f'{about_user_data[1]} - (@{about_user_data[2]})'
     sheet[f'D{max_row}'].alignment = long_text
-    sheet[f'D{max_row}'] = text
+    sheet[f'D{max_row}'] = txt_about_place
+    sheet[f'E{max_row}'].alignment = long_text
+    sheet[f'E{max_row}'] = txt_about_user
 
     workbook.save(path)
 

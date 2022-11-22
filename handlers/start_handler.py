@@ -4,7 +4,8 @@ import logging
 from aiogram import Dispatcher, types
 
 from keyboards.reply_main import reply_main_menu
-from postgre.commands_db import add_user, select_user, update_active_user, create_table_users, create_table_answers
+from postgre.commands_db import add_user, select_user, update_active_user, create_table_users, create_table_answers, \
+    create_table_meetings, create_table_rating, create_table_images
 from filters.all_admins import get_all_admins
 
 admins = get_all_admins()
@@ -18,6 +19,10 @@ def register_start_handlers(dp: Dispatcher):
     async def crete_t(message: types.Message):
         create_table_users()
         create_table_answers()
+        create_table_meetings()
+        create_table_rating()
+        create_table_images()
+
         logging.info('Создали все таблицы')
         await message.answer('Tables is create')
 
@@ -25,7 +30,10 @@ def register_start_handlers(dp: Dispatcher):
     async def get_start(message: types.Message):
         user_id = message.from_user['id']
         first_name = message.from_user['first_name']
-        username = message.from_user['username']
+        if message.from_user['username'] == None:
+            username = f'tg://user?id={message.from_user["id"]}'
+        else:
+            username = '@' + message.from_user['username']
         user_db = select_user(user_id)
         if user_db == []:
             add_user(user_id, first_name, username)

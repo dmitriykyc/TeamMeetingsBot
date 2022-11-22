@@ -3,4 +3,5 @@ aiogram==2.22.2
 psycopg2-binary==2.9.5
 python-dotenv==0.21.0
 aioredis
+aioschedule==0.5.2
 

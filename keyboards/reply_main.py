@@ -7,6 +7,9 @@ reply_main_menu = ReplyKeyboardMarkup(
         ],
         [
             KeyboardButton(text='Отчет Exele')
+        ],
+        [
+            KeyboardButton(text='Скачать архив с фото')
         ]
     ], resize_keyboard=True
 )
