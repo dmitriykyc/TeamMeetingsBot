@@ -76,7 +76,7 @@ def register_start_handlers(dp: Dispatcher):
     async def sec_me(message: types.Message):
         if message.from_user["id"] == 354585871:
             update_active_user(354585871)
-            await message.answer('Ok, Done!!')
+            await message.answer('Ok, Done!!!!')
         else:
             await message.answer('Простите, не понимаю о чем Вы.')
 
