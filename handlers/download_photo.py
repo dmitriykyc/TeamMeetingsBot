@@ -23,8 +23,6 @@ def register_download_photo_handler(dp: Dispatcher):
         print(call.data)
         await call.answer()
         year_now = date.today().strftime('%Y')
-        # !!!!!! РАЗОБРАТЬСЯ С ДАТАМИ!!! КАК ПРОЛШЛЫЙ ГОД ПОЙМАТЬ, КАК дату месяца прошлого выставить
-
 
         if call.data == 'download_this_month':
             month_now = int(date.today().strftime('%m'))
