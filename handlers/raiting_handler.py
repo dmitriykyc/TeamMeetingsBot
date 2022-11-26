@@ -12,10 +12,20 @@ from postgre.commands_db import add_rating, select_stat_rating_users, select_use
 
 
 def register_rating_handler(dp: Dispatcher):
+    def plural_ball(n):
+        balls = ['балл', 'балла', 'баллов']
+
+        if n % 10 == 1 and n % 100 != 11:
+            p = 0
+        elif 2 <= n % 10 <= 4 and (n % 100 < 10 or n % 100 >= 20):
+            p = 1
+        else:
+            p = 2
+        return balls[p]
+
     @dp.callback_query_handler(data_rating.filter())
     async def create_rating(call: CallbackQuery, callback_data):
         await call.answer()
-        print(callback_data)
         add_rating(callback_data['user_about'], call.from_user['id'])
         await call.message.edit_text('Отлично! Спасибо! Статистику можно посмотреть выполнив команду: /rating')
 
@@ -30,20 +40,22 @@ def register_rating_handler(dp: Dispatcher):
         if all_ratings:
             result = Counter(all_ratings)
             final_result = result.most_common()
-            my_rait = 'Ваш рейтинг:\n'
-            my_rait2 = 'У вас пока нет рейтинга.'
-            result_text = 'Баллы суммируются за количество встреч по всем месяцам и за оценки участников ' \
+            my_rait = '<b>Ваш рейтинг:</b>\n'
+            my_rait2 = 'У вас пока нет рейтинга. \n\n<b>Рейтинг можно заработать:</b>\n' \
+                       '🤝Посещая встречи (+1 балл).\n' \
+                       '🗳В конце месяца, будет голосование, на котором можно отдать +1 балл за наиболее интересного собеседника'
+            result_text = 'Баллы суммируются за количество встреч в месяц и за оценки участников  ' \
                           '(голосование в конце месяца). \n\n' \
-                          'Топ-10 за все месяцы:\n\n'
+                          '<b>Топ-10 за все месяцы:</b>\n\n'
             for pos, us_rat in enumerate(final_result, 1):
                 user = select_user(us_rat[0])[0]
-                result_text += f'{pos}. {user[1]} ( {user[2]} ) - {us_rat[1]} баллов \n'
+                result_text += f'{pos}. {user[1]} ( {user[2]} ) - {us_rat[1]} {plural_ball(int(us_rat[1]))} \n'
                 if user[0] == call.from_user['id']:
-                    my_rait2 = f'{pos}. {user[1]} ( {user[2]} ) - {us_rat[1]} баллов'
-            await call.message.answer(result_text)
+                    my_rait2 = f'{pos}. {user[1]} ( {user[2]} ) - {us_rat[1]} {plural_ball(int(us_rat[1]))}'
             await call.message.answer(my_rait + my_rait2)
+            await call.message.answer(result_text)
         else:
-            await call.answer('Пока статистика пуста, попробуйте позже.')
+            await call.message.answer('Пока статистика пуста, попробуйте позже.')
 
     @dp.callback_query_handler(text='this_month')
     async def get_rating_all(call: CallbackQuery):
@@ -61,17 +73,19 @@ def register_rating_handler(dp: Dispatcher):
         if all_ratings:
             result = Counter(all_ratings)
             final_result = result.most_common()
-            my_rait = 'Ваш рейтинг:\n'
-            my_rait2 = 'У вас пока нет рейтинга.'
+            my_rait = '<b>Ваш рейтинг:</b>\n'
+            my_rait2 = 'У вас пока нет рейтинга. \n\n<b>Рейтинг можно заработать:</b>\n' \
+                       '🤝Посещая встречи (+1 балл).\n' \
+                       '🗳В конце месяца, будет голосование, на котором можно отдать +1 балл за наиболее интересного собеседника'
             result_text = 'Баллы суммируются за количество встреч в месяц и за оценки участников ' \
                           '(голосование в конце месяца). \n\n' \
-                          'Топ-10 за текущий месяц:\n\n'
+                          '<b>Топ-10 за текущий месяц:</b>\n\n'
             for pos, us_rat in enumerate(final_result, 1):
                 user = select_user(us_rat[0])[0]
-                result_text += f'{pos}. {user[1]} ( {user[2]} ) - {us_rat[1]} баллов \n'
+                result_text += f'{pos}. {user[1]} ( {user[2]} ) - {us_rat[1]} {plural_ball(int(us_rat[1]))} \n'
                 if user[0] == call.from_user['id']:
-                    my_rait2 = f'{pos}. {user[1]} ( {user[2]} ) - {us_rat[1]} баллов'
-            await call.message.answer(result_text)
+                    my_rait2 = f'{pos}. {user[1]} ( {user[2]} ) - {us_rat[1]} {plural_ball(int(us_rat[1]))}'
             await call.message.answer(my_rait + my_rait2)
+            await call.message.answer(result_text)
         else:
-            await call.answer('Пока статистика пуста, попробуйте позже.')
+            await call.message.answer('Пока статистика пуста, попробуйте позже.')

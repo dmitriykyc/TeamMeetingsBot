@@ -10,11 +10,21 @@ from postgre.commands_db import select_active_meetings, db_deactivate_meeting, d
     select_active_meeting_after_confirmed
 
 
+def plural_days(n):
+    days = ['день', 'дня', 'дней']
+
+    if n % 10 == 1 and n % 100 != 11:
+        p = 0
+    elif 2 <= n % 10 <= 4 and (n % 100 < 10 or n % 100 >= 20):
+        p = 1
+    else:
+        p = 2
+    return days[p]
+
 async def get_last_day(dp, get_last_day_month):
     start_month = date.today().replace(day=1)
     end_month = date.today().replace(day=int(get_last_day_month))
     all_act_meet = select_all_result_meet_month(start_month, end_month)
-    print(all_act_meet)
     done_user = []
     for meet in all_act_meet:
         user_id = meet[1]
@@ -27,11 +37,12 @@ async def get_last_day(dp, get_last_day_month):
                 if companion and companion[0] not in companions:
                     companions.append(companion[0])
 
-            await dp.bot.send_message(user_id, '📈Собираем рейтинг в конце меяца. '
+            await dp.bot.send_message(user_id, '📈Собираем рейтинг в конце меяца.\n '
                                                'Кто из собеседников Вам понравился больше всего?'
                                                ' Кому добавим ещё один балл?',
                                       reply_markup=inline_rating(user_id, companions))
             done_user.append(user_id)
+        await asyncio.sleep(1)
 
 async def send_seven_days(dp):
     all_meetings = select_active_meetings()
@@ -46,15 +57,15 @@ async def send_seven_days(dp):
                 db_deactivate_meeting(meeting[0])
                 bd_make_free_user(user[0])
                 bd_make_free_user(user_about[0])
-                await dp.bot.send_message(meeting[1], f'К сожалению мы отменили Вашу встречу'
+                await dp.bot.send_message(meeting[1], f'К сожалению, мы отменили Вашу встречу'
                                                       f' c {user_about[1]} ( {user_about[2]} ).')
             else:
                 new_day = meeting[5] - 1
                 db_change_day(meeting[0], new_day)
                 await dp.bot.send_message(meeting[1], f'Вы еще не подтвердили встречу c'
-                                                      f' {user_about[1]} ( {user_about[2]} ), осталось {new_day} дней!',
+                                                      f' {user_about[1]} ( {user_about[2]} ), осталось {new_day} {plural_days(new_day)}!',
                                                       reply_markup=inline_confirm_user(user[0], user_about[0]))
-        await asyncio.sleep(1)
+            await asyncio.sleep(1)
     # Отправляем напоминания чтобы встретились
     all_meetings_bef_conf = select_active_meeting_after_confirmed()
     if all_meetings_bef_conf:
@@ -67,31 +78,31 @@ async def send_seven_days(dp):
                 db_deactivate_meeting(meeting_conf[0])
                 bd_make_free_user(user[0])
                 bd_make_free_user(user_about[0])
-                await dp.bot.send_message(meeting_conf[1], f'К сожалению, вы не успели встретиться,'
-                                                           f' мы аннулировали Вашу встречу с '
+                await dp.bot.send_message(meeting_conf[1], f'К сожалению, мы отменили вашу встречу c '
                                                            f'{user_about[1]} ( {user_about[2]} ).')
             else:
                 new_day = meeting_conf[5] - 1
                 db_change_day(meeting_conf[0], new_day)
                 await dp.bot.send_message(meeting_conf[1], f'Вы еще не сходили на встречу с'
-                                                      f' {user_about[1]} ( {user_about[2]} ), осталось {new_day} дней! '
-                                                           f'По истечению дней, встреча аннулируется!',
+                                                      f' {user_about[1]} ( {user_about[2]} ), осталось {new_day} {plural_days(new_day)}! '
+                                                           f'По истечению {new_day} {plural_days(new_day)}, встреча аннулируется!',
                                                       reply_markup=inline_send_answer(user[0], user_about[0]))
-        await asyncio.sleep(1)
+            await asyncio.sleep(1)
 
     year_now = date.today().strftime('%Y')
     month_now = date.today().strftime('%m')
     day_now = int(date.today().strftime('%d'))
     get_last_day_month = calendar.monthrange(int(year_now), int(month_now))[1]
 
-    # if get_last_day_month == int(day_now):
-    if 29 == int(day_now):
+    # if 28 == int(day_now):
+    if get_last_day_month == int(day_now):
         await get_last_day(dp, get_last_day_month)
 
 
 async def start_remimber(dp):
     print('Start remimber1')
-    aioschedule.every().day.at("10:00").do(send_seven_days, dp)
+    # aioschedule.every().day.at("8:00").do(send_seven_days, dp)
+    aioschedule.every(10).seconds.do(send_seven_days, dp)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)

@@ -34,14 +34,14 @@ def create_dating_handler(dp: Dispatcher):
             user_1 = list(get_users[0])
             user_2 = list(get_users[1])
             text = f'Рандомно выбранные пользователи для встречи:\n' \
-                   f'👤{user_1[1]} ({user_1[2]})\n' \
-                   f'👤{user_2[1]} ({user_2[2]})\n\n' \
+                   f'👤{user_1[1]} ( {user_1[2]} )\n' \
+                   f'👤{user_2[1]} ( {user_2[2]} )\n\n' \
                    f'Отправляем приглашение?'
             print(user_1)
             print(user_2)
             await message.answer(f'{text}', reply_markup=inline_confirm_admin(user_1[0], user_2[0]))
         else:
-            await message.answer('Не удалось собрать пару, подождите пока кто то освободится.')
+            await message.answer('Не удалось собрать пару, подождите пока кто-то освободится.')
 
     @dp.callback_query_handler(data_confirm_admin.filter())
     async def send_invite(call: CallbackQuery, callback_data):
@@ -58,14 +58,14 @@ def create_dating_handler(dp: Dispatcher):
             bd_make_busy_user(user2[0])
             await dp.bot.send_message(user1[0],
                                       f'🎉Вы были выбраны для встречи с {user2[1]} ( {user2[2]} )!\n'
-                                      f'У вас есть 7 дней чтобы договориться, выбрать место и время. \n'
-                                      f'Если встреча не будет подтверждена, она аннулируется.\n\n'
+                                      f'Осталась неделя, чтобы договориться, выбрать место и время. \n\n'
+                                      f'Если встреча не будет подтверждена обоими участниками, она аннулируется.\n\n'
                                       f'Когда договоритесь, нажмите на кнопку под этим сообщением 👇',
                                       reply_markup=inline_confirm_user(user1[0], user2[0]))
             await dp.bot.send_message(user2[0],
                                       f'🎉Вы были выбраны для встречи с {user1[1]} ( {user1[2]} )!'
-                                      f'У вас есть 7 дней чтобы договориться, выбрать место и время. \n'
-                                      f'Если встреча не будет подтверждена, она аннулируется.\n\n'
+                                      f'Осталась неделя, чтобы договориться, выбрать место и время. \n\n'
+                                      f'Если встреча не будет подтверждена обоими участниками, она аннулируется.\n\n'
                                       f'Когда договоритесь, нажмите на кнопку под этим сообщением 👇',
                                       reply_markup=inline_confirm_user(user2[0], user1[0]))
             logging.info(f'Отправлены приглашения для: \n'
@@ -82,8 +82,11 @@ def create_dating_handler(dp: Dispatcher):
     @dp.callback_query_handler(data_confirm_user.filter())
     async def done_from_user(call: CallbackQuery, callback_data):
         await call.answer()
-        print(11111111)
         user_from = call.from_user
+        if user_from["username"]:
+            user_from_username = f"@{user_from['username']}"
+        else:
+            user_from_username = f"tg://user?id={user_from['id']}"
         user_about = list(select_user(callback_data['user_about'])[0])
         already_confirm = select_one_meeting_confirm_or_not(user_from['id'], user_about[0])
         print(already_confirm)
@@ -93,19 +96,19 @@ def create_dating_handler(dp: Dispatcher):
                          f'c {user_about[1]} ({user_about[2]})')
 
             await call.message.delete()
-            await call.message.answer(f'👍Отлично! \n Теперь у Вас есть 7 дней для того чтобы завершить Вашу встречу. '
+            await call.message.answer(f'👍Отлично! \n Теперь у вас есть неделя для того, чтобы совершить вашу встречу.\n '
                                       f'После вашей встречи с {user_about[1]} ( {user_about[2]} ) '
                                       f'нажмите кнопку внизу',
                                       reply_markup=inline_send_answer(user_from['id'], user_about[0]))
 
             text = f'⚡️Подтверждение встречи:\n' \
-                   f'{call.from_user["first_name"]} ( {user_from["username"]} ) договорились о встрече ' \
-                   f'c {user_about[1]} ({user_about[2]})'
+                   f'{call.from_user["first_name"]} ( {user_from_username} ) договорились о встрече ' \
+                   f'c {user_about[1]} ( {user_about[2]} )'
 
             for admin in admins:
                 await dp.bot.send_message(admin, text)
         else:
-            await call.message.edit_text('Вы уже договорились ранее')
+            await call.message.edit_text('Вы уже договорились ранее или завершили встречу.')
 
 
     # @dp.callback_query_handler(data_agreed_meeting.filter())
