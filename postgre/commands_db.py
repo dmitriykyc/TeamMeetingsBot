@@ -16,7 +16,7 @@ def create_table_users():
     connect = connect_bd()
     cursor = connect.cursor()
     sql = 'CREATE TABLE IF NOT EXISTS users' \
-          ' (ID BIGINT NOT NULL,' \
+          ' (ID BIGINT NOT NULL PRIMARY KEY,' \
           ' first_name VARCHAR(200) DEFAULT NULL,' \
           ' username VARCHAR(200) DEFAULT NULL,' \
           ' is_active BOOL DEFAULT TRUE,' \
