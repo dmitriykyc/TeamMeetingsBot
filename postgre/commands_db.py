@@ -456,6 +456,15 @@ def select_is_free_user(user_id):
     connect.close()
     return is_active_user
 
+def bd_is_free_user(user_id):
+    connect = connect_bd()
+    cursor = connect.cursor()
+    sql = f"SELECT is_active FROM users WHERE id={user_id}"
+    cursor.execute(sql)
+    res_is_active_user = cursor.fetchall()
+    connect.commit()
+    connect.close()
+    return res_is_active_user
 def bd_make_free_user(user_id):
     connect = connect_bd()
     cursor = connect.cursor()

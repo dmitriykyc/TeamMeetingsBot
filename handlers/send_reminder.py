@@ -1,13 +1,14 @@
 import asyncio
-
+import logging
 import aioschedule
 import calendar
 from datetime import date
+from aiogram.utils.exceptions import BotBlocked
 
 from keyboards.inline_answer import inline_confirm_user, inline_rating, inline_send_answer
 from postgre.commands_db import select_active_meetings, db_deactivate_meeting, db_change_day, select_user, \
     select_all_result_meet_month, select_result_meet_month_for_user, bd_make_free_user, \
-    select_active_meeting_after_confirmed
+    select_active_meeting_after_confirmed, bd_is_free_user
 
 
 def plural_days(n):
@@ -20,6 +21,7 @@ def plural_days(n):
     else:
         p = 2
     return days[p]
+
 
 async def get_last_day(dp, get_last_day_month):
     start_month = date.today().replace(day=1)
@@ -44,9 +46,10 @@ async def get_last_day(dp, get_last_day_month):
             done_user.append(user_id)
         await asyncio.sleep(1)
 
+
 async def send_seven_days(dp):
     all_meetings = select_active_meetings()
-
+    print(all_meetings)
     if all_meetings:
         print('Metiing is not confirmed')
         for meeting in all_meetings:
@@ -57,14 +60,26 @@ async def send_seven_days(dp):
                 db_deactivate_meeting(meeting[0])
                 bd_make_free_user(user[0])
                 bd_make_free_user(user_about[0])
-                await dp.bot.send_message(meeting[1], f'К сожалению, мы отменили Вашу встречу'
-                                                      f' c {user_about[1]} ( {user_about[2]} ).')
+
+                # Проверка, можно ли написать человеку:
+                free_user_now = bd_is_free_user(meeting[1])
+                if free_user_now[0][0]:
+                    await dp.bot.send_message(meeting[1], f'К сожалению, мы отменили Вашу встречу'
+                                                          f' c {user_about[1]} ( {user_about[2]} ).')
+                else:
+                    logging.info(f'{meeting} - f{meeting[1]} Покинул бота')
             else:
                 new_day = meeting[5] - 1
                 db_change_day(meeting[0], new_day)
-                await dp.bot.send_message(meeting[1], f'Вы еще не подтвердили встречу c'
-                                                      f' {user_about[1]} ( {user_about[2]} ), осталось {new_day} {plural_days(new_day)}!',
-                                                      reply_markup=inline_confirm_user(user[0], user_about[0]))
+
+                # Проверка, можно ли написать человеку:
+                free_user_now = bd_is_free_user(meeting[1])
+                if free_user_now[0][0]:
+                    await dp.bot.send_message(meeting[1], f'Вы еще не подтвердили встречу c'
+                                                          f' {user_about[1]} ( {user_about[2]} ), осталось {new_day} {plural_days(new_day)}!',
+                                              reply_markup=inline_confirm_user(user[0], user_about[0]))
+                else:
+                    logging.info(f'{meeting} - f{meeting[1]} Покинул бота')
             await asyncio.sleep(1)
     # Отправляем напоминания чтобы встретились
     all_meetings_bef_conf = select_active_meeting_after_confirmed()
@@ -78,15 +93,26 @@ async def send_seven_days(dp):
                 db_deactivate_meeting(meeting_conf[0])
                 bd_make_free_user(user[0])
                 bd_make_free_user(user_about[0])
-                await dp.bot.send_message(meeting_conf[1], f'К сожалению, мы отменили вашу встречу c '
-                                                           f'{user_about[1]} ( {user_about[2]} ).')
+
+                # Проверка, можно ли написать человеку:
+                free_user_now = bd_is_free_user(meeting_conf[1])
+                if free_user_now[0][0]:
+                    await dp.bot.send_message(meeting_conf[1], f'К сожалению, мы отменили вашу встречу c '
+                                                               f'{user_about[1]} ( {user_about[2]} ).')
+                else:
+                    logging.info(f'{meeting_conf} - f{meeting_conf[1]} Покинул бота')
             else:
                 new_day = meeting_conf[5] - 1
                 db_change_day(meeting_conf[0], new_day)
-                await dp.bot.send_message(meeting_conf[1], f'Вы еще не сходили на встречу с'
-                                                      f' {user_about[1]} ( {user_about[2]} ), осталось {new_day} {plural_days(new_day)}! '
-                                                           f'По истечению {new_day} {plural_days(new_day)}, встреча аннулируется!',
-                                                      reply_markup=inline_send_answer(user[0], user_about[0]))
+                # Проверка, можно ли написать человеку:
+                free_user_now = bd_is_free_user(meeting_conf[1])
+                if free_user_now[0][0]:
+                    await dp.bot.send_message(meeting_conf[1], f'Вы еще не сходили на встречу с'
+                                                               f' {user_about[1]} ( {user_about[2]} ), осталось {new_day} {plural_days(new_day)}! '
+                                                               f'По истечению {new_day} {plural_days(new_day)}, встреча аннулируется!',
+                                              reply_markup=inline_send_answer(user[0], user_about[0]))
+                else:
+                    logging.info(f'{meeting_conf} - f{meeting_conf[1]} Покинул бота')
             await asyncio.sleep(1)
 
     year_now = date.today().strftime('%Y')
@@ -101,10 +127,8 @@ async def send_seven_days(dp):
 
 async def start_remimber(dp):
     print('Start remimber1')
-    aioschedule.every().day.at("8:00").do(send_seven_days, dp)
-    # aioschedule.every(10).seconds.do(send_seven_days, dp)
+    # aioschedule.every().day.at("8:00").do(send_seven_days, dp)
+    aioschedule.every(15).seconds.do(send_seven_days, dp)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
-
-
