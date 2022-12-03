@@ -127,8 +127,8 @@ async def send_seven_days(dp):
 
 async def start_remimber(dp):
     print('Start remimber1')
-    # aioschedule.every().day.at("8:00").do(send_seven_days, dp)
-    aioschedule.every(15).seconds.do(send_seven_days, dp)
+    aioschedule.every().day.at("8:00").do(send_seven_days, dp)
+    # aioschedule.every(15).seconds.do(send_seven_days, dp)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
