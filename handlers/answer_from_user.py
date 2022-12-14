@@ -13,9 +13,6 @@ from state.answer_state import GetAnswer
 from filters.all_admins import get_all_admins
 
 admins = get_all_admins()
-logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="w",
-                    format="%(asctime)s %(levelname)s %(message)s:-->")
-
 
 def register_answer_form_handler(dp: Dispatcher):
     @dp.callback_query_handler(data_send_answer.filter(), state='*')

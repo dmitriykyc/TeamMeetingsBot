@@ -3,6 +3,7 @@ import random
 
 from aiogram import Dispatcher, types
 from aiogram.types import CallbackQuery
+from aiogram.utils.exceptions import BotBlocked
 
 from keyboards.inline_answer import inline_confirm_admin, inline_confirm_user, inline_send_answer, inline_agreed_meeting
 from keyboards.inline_answer_data import data_confirm_admin, data_confirm_user, data_agreed_meeting
@@ -12,8 +13,6 @@ from postgre.commands_db import select_all_active_users, select_user, add_tabl_m
 from filters.all_admins import get_all_admins
 
 admins = get_all_admins()
-logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="r+",
-                    format="%(asctime)s %(levelname)s %(message)s:-->")
 
 
 def create_dating_handler(dp: Dispatcher):
@@ -37,8 +36,6 @@ def create_dating_handler(dp: Dispatcher):
                    f'👤{user_1[1]} ( {user_1[2]} )\n' \
                    f'👤{user_2[1]} ( {user_2[2]} )\n\n' \
                    f'Отправляем приглашение?'
-            print(user_1)
-            print(user_2)
             await message.answer(f'{text}', reply_markup=inline_confirm_admin(user_1[0], user_2[0]))
         else:
             await message.answer('Не удалось собрать пару, подождите пока кто-то освободится.')
@@ -51,7 +48,10 @@ def create_dating_handler(dp: Dispatcher):
         # Дополнительные проверки активности от прошлых сообщений
         is_active_1 = select_is_free_user(user1[0])
         is_active_2 = select_is_free_user(user2[0])
+        print(is_active_2)
+        print(is_active_1)
         if is_active_1 and is_active_2:
+            logging.info(f'Пробуем разослать приглашения для: \n1. {user1}\n2. {user2}')
             add_tabl_meetings(user1[0], user2[0])
             add_tabl_meetings(user2[0], user1[0])
             bd_make_busy_user(user1[0])
@@ -62,15 +62,14 @@ def create_dating_handler(dp: Dispatcher):
                                       f'Если встреча не будет подтверждена обоими участниками, она аннулируется.\n\n'
                                       f'Когда договоритесь, нажмите на кнопку под этим сообщением 👇',
                                       reply_markup=inline_confirm_user(user1[0], user2[0]))
+            logging.info(f'{user1} - успешно')
             await dp.bot.send_message(user2[0],
                                       f'🎉Вы были выбраны для встречи с {user1[1]} ( {user1[2]} )!'
                                       f'Осталась неделя, чтобы договориться, выбрать место и время. \n\n'
                                       f'Если встреча не будет подтверждена обоими участниками, она аннулируется.\n\n'
                                       f'Когда договоритесь, нажмите на кнопку под этим сообщением 👇',
                                       reply_markup=inline_confirm_user(user2[0], user1[0]))
-            logging.info(f'Отправлены приглашения для: \n'
-                         f'{user1}\n'
-                         f'{user2}')
+            logging.info(f'{user2} - успешно')
             await call.message.delete()
             await call.message.answer('✅Отлично!\n '
                                       'Приглашения отправлены, вы получите подтверждения от этих пользователей.')

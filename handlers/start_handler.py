@@ -9,9 +9,6 @@ from postgre.commands_db import add_user, select_user, update_active_user, creat
 from filters.all_admins import get_all_admins
 
 admins = get_all_admins()
-logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="r+",
-                    format="%(asctime)s %(levelname)s %(message)s:-->")
-
 
 def register_start_handlers(dp: Dispatcher):
 
@@ -61,6 +58,7 @@ def register_start_handlers(dp: Dispatcher):
         user_id = my_chat_member['chat']['id']
         if my_chat_member['new_chat_member']['status'] == "kicked":
             update_active_user(user_id)
+        logging.info(f'{user_id} --> Нажал кнопку выйти из бота')
 
     @dp.message_handler(text='Отчет Exele')
     async def get_report(message: types.Message):

@@ -14,8 +14,8 @@ from handlers.send_reminder import start_remimber
 from handlers.start_handler import register_start_handlers
 
 load_dotenv()
-logging.basicConfig(level=logging.INFO, filename="TMBot_log.log", filemode="w",
-                    format="%(asctime)s %(levelname)s %(message)s:-->")
+logging.basicConfig(level=logging.INFO, filename="TMBot_log.log",
+                    format=":--> %(asctime)s %(levelname)s %(filename)s %(lineno)d\n   %(message)s")
 
 
 
@@ -37,7 +37,6 @@ def register_all_handlers(dp):
 
 async def main():
     bot = Bot(token=os.getenv("TOKEN"), parse_mode='HTML')
-
     dp = Dispatcher(bot, storage=RedisStorage2(host=os.getenv('REDIS_HOST')))
     register_all_middlewares(dp)
     register_all_filters(dp)
@@ -46,10 +45,8 @@ async def main():
 
     # start
     try:
-        print("Bot started")
         logging.info('Bot srarted')
         await dp.start_polling()
-        print('123')
     finally:
         await dp.storage.close()
         await dp.storage.wait_closed()
